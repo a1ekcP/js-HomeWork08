@@ -2,9 +2,11 @@
 import Row from 'react-bootstrap/Row';
 import { useEffect, useState } from 'react';
 import Product from './Product';
+import ProductsMenu from './ProductsMenu';
 
 function Products(){
     const [productsArr, setProductsArr] = useState([]);
+    const [productsFilter, setProductsFilter] = useState([]);
     useEffect(()=>{
         setProductsArr([
             {
@@ -92,11 +94,20 @@ function Products(){
                 description:'Ромовий напій Captain Morgan Spiced Black 1 л 40% '
             }
         ])
-    }, [])
+    }, []);
 
-    return <Row xs={1} md={3} className="g-4 py-4">
-            {productsArr.map(product => <Product product={product}/>)}
-         </Row>
+    function select(event){
+        let value = event.currentTarget.value;
+        console.log(value);
+        setProductsFilter(productsArr.filter(prod => prod.brand === value))
+    }
+
+    return <>
+        <ProductsMenu select={select} productsArr={productsArr}/>
+        <Row xs={1} md={3} className="g-4 py-4 justify-content-center">
+            {productsFilter.length ? productsFilter.map(product => <Product key={product.brand} product={product}/>) : productsArr.map(product => <Product key={product.brand} product={product}/>)}
+        </Row>
+    </>
 }
 
 export default Products;
